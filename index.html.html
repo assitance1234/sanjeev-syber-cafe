@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanjeev Cyber Cafe</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f9fafb; color: #333; }
+    header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #ddd; position: sticky; top: 0; }
+    header h1 { margin: 0; font-size: 20px; display: inline-block; }
+    header .buttons { float: right; }
+    header a { text-decoration: none; padding: 8px 12px; background: #25d366; color: white; border-radius: 6px; margin-left: 6px; font-size: 14px; }
+    section { padding: 20px; max-width: 1000px; margin: auto; }
+    h2 { margin-top: 0; }
+    .services, .prices { display: grid; gap: 15px; }
+    .services div, .prices div { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    .updates { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); max-height: 250px; overflow-y: auto; }
+    .update { margin-bottom: 12px; }
+    .update-user { font-weight: bold; font-size: 14px; }
+    .update-text { font-size: 14px; margin: 4px 0; }
+    .update-time { font-size: 11px; color: #666; }
+    footer { background: #fff; padding: 20px; border-top: 1px solid #ddd; text-align: center; font-size: 14px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Sanjeev Cyber Cafe</h1>
+  <div class="buttons">
+    <a href="https://wa.me/7277119868" target="_blank">Chat on WhatsApp</a>
+    <a href="https://chat.whatsapp.com/EUof2LRke4DGVKdlB0Mqi4?mode=ems_copy_c" target="_blank">Join Group</a>
+  </div>
+  <div style="clear:both"></div>
+</header>
+<section>
+  <h2>Our Services</h2>
+  <div class="services">
+    <div><b>Printing & Scanning</b><br> B/W & Color, photocopy, lamination.</div>
+    <div><b>Online Services</b><br> Forms, tickets, PAN & passport help.</div>
+    <div><b>High-Speed Internet</b><br> Fast browsing, downloads, Wi-Fi.</div>
+    <div><b>PC & Mobile Help</b><br> Software install, email setup.</div>
+  </div>
+</section>
+<section>
+  <h2>Prices</h2>  
+  <div class="prices">
+    <div><b>Printing</b><br>B/W A4: ₹3<br>Color A4: ₹10<br>Scanning: ₹10</div>
+    <div><b>Online Forms</b><br>Basic: ₹50<br>Tickets: ₹40 + charges<br>PAN/Passport: from ₹100</div>
+    <div><b>PC Time</b><br>Browsing/hr: ₹30<br>Wi-Fi/hr: ₹20<br>Assisted work: ₹50/15min</div>
+  </div>
+</section>
+<section>
+  <h2>Live Updates</h2>
+  <div id="updates" class="updates">
+    <div>Loading updates…</div>
+  </div>
+  <p style="font-size: 12px; color: #666; margin-top: 5px;">
+    Note: This shows public updates you control (via updates.json). 
+    WhatsApp group chats cannot be embedded directly.
+  </p>
+</section>
+<footer>
+  📍 Bihar, gaya, manpur kumartoli surypokhar road| ☎ +91 7277119868<br>
+  ⏰ Open Daily: 9:00 AM – 8:00 PM<br>
+  © <span id="year"></span> Sanjeev Cyber Cafe
+</footer>
+<script>
+  // set year
+  document.getElementById("year").textContent = new Date().getFullYear();
+  async function loadUpdates() {
+    try {
+      let res = await fetch("updates.json?" + Date.now());
+      let data = await res.json();
+      showUpdates(data);
+    } catch (e) {
+      // fallback
+      showUpdates([
+        {user:"Admin", text:"Welcome to Sanjeev Cyber Cafe 🎉", ts: Date.now()-3600000},
+        {user:"Admin", text:"Today's offer: 10% off printing.", ts: Date.now()-600000}
+      ]);
+    }
+  }
+  function timeAgo(ts) {
+    let sec = Math.floor((Date.now() - ts)/1000);
+    if (sec < 60) return sec+"s ago";
+    let min = Math.floor(sec/60);
+    if (min < 60) return min+"m ago";
+    let hr = Math.floor(min/60);
+    if (hr < 24) return hr+"h ago";
+    return Math.floor(hr/24)+"d ago";
+  }
+  function showUpdates(data) {
+    let box = document.getElementById("updates");
+    box.innerHTML = "";
+    data.forEach(u=>{
+      let div = document.createElement("div");
+      div.className="update";
+      div.innerHTML = `
+        <div class="update-user">${u.user}</div>
+        <div class="update-text">${u.text}</div>
+        <div class="update-time">${timeAgo(u.ts)}</div>`;
+      box.appendChild(div);
+    });
+  }
+  loadUpdates();
+  setInterval(loadUpdates, 15000);
+</script>
+</body>
+</html>
